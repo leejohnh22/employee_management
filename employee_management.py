@@ -51,6 +51,23 @@ class Employee():
 	def __str__(self):
 		return "\nName : " + self.__name + "\nDepartment : " + self.__department + "\nJob Title : " + self.__job_title
 
+class Contractor(Employee):
+
+	def __init__(self, name, department, job_title, contract_expiration_date):
+		# Initialize base class attributes
+		Employee.__init__(self, name, department, job_title)
+
+		self.__contract_expiration_date = contract_expiration_date
+
+	def get_contract_expiration_date():
+		return self.__contract_expiration_date
+
+	def set_contract_expiration_date(contract_expiration_date):
+		self.__contract_expiration_date = contract_expiration_date
+
+	def __str__(self):
+		return Employee.__str__(self) + "\nContract Expiration Date : " +  self.__contract_expiration_date
+
 def main():
 
 	# Initialize dict to store employees
@@ -134,14 +151,30 @@ def add_employee(employees):
 	# get name
 	name = input("Enter employee's name : ")
 
+	while name.isalpha() == False:
+		name = input('Enter valid alphabetical characters for the employee name : ')
+
 	# get department
 	department = input("Enter employee's department : ")
 
 	# get job title
 	job_title = input("Enter employee's job title : ")
 
-	# create employee object instance
-	employee = Employee(name, department, job_title)
+	contractor = input("Is employee a contractor? (Y/N) ")
+
+	while contractor.lower() != 'y' and contractor.lower() != 'n':
+		contractor = input("Enter valid option. Is employee a contractor? (Y/N) ")
+
+	# check if employee is a contractor
+	if contractor.lower() == 'n':
+		# create employee object instance
+		employee = Employee(name, department, job_title)
+	elif contractor.lower() == 'y':
+		# get contract expiration date
+		contract_expiration_date = input('Enter contract expiration date : ')
+
+		# create contractor
+		employee = Contractor(name, department, job_title, contract_expiration_date)
 
 	# add to employees dict
 	if name not in employees:
@@ -152,6 +185,12 @@ def add_employee(employees):
 
 def change_employee_info(employees):
 
+	# check if employee is a contractor
+	contractor = input("Is employee a contractor? (Y/N) ")
+
+	while contractor.lower() != 'y' and contractor.lower() != 'n':
+		contractor = input("Enter valid option. Is employee a contractor? (Y/N) ")
+
 	# Get employee name
 	name = input("Enter employee's name : ")
 
@@ -161,7 +200,13 @@ def change_employee_info(employees):
 		job_title = input("Enter employee's job title : ")
 		
 		# Change info
-		employee = Employee(name, department, job_title)
+		if contractor.lower() == 'n':
+			employee = Employee(name, department, job_title)
+		elif contractor.lower() == 'y':
+			contract_expiration_date = input('Enter contract expiration date : ')
+			employee = Contractor(name, department, job_title, contract_expiration_date)
+		
+		# Add to dict
 		employees[name] = employee
 
 	# If employee does not exist, then pass
